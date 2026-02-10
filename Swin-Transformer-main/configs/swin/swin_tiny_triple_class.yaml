@@ -1,0 +1,99 @@
+# --------------------------------------------------------
+# Swin Transformer Tiny for Triple Classification
+# --------------------------------------------------------
+BASE: []
+
+DATA:
+  BATCH_SIZE: 64
+  DATA_PATH: ''  # 设置您的数据集路径
+  DATASET: 'imagenet'
+  IMG_SIZE: 224
+  INTERPOLATION: 'bicubic'
+  ZIP_MODE: False
+  CACHE_MODE: 'part'
+  PIN_MEMORY: True
+  NUM_WORKERS: 8
+
+MODEL:
+  TYPE: 'swin'
+  NAME: 'swin_tiny_triple_class'
+  PRETRAINED: 'pretrain/swin_tiny_patch4_window7_224.pth'  # ImageNet预训练权重
+  RESUME: ''
+  NUM_CLASSES: 3  # 关键：设置为3个类别
+  DROP_RATE: 0.0
+  DROP_PATH_RATE: 0.35
+  LABEL_SMOOTHING: 0.1
+
+  SWIN:
+    PATCH_SIZE: 4
+    IN_CHANS: 3
+    EMBED_DIM: 96
+    DEPTHS: [2, 2, 6, 2]
+    NUM_HEADS: [3, 6, 12, 24]
+    WINDOW_SIZE: 7
+    MLP_RATIO: 4.
+    QKV_BIAS: True
+    QK_SCALE: None
+    APE: False
+    PATCH_NORM: True
+
+TRAIN:
+  START_EPOCH: 0
+  EPOCHS: 300
+  WARMUP_EPOCHS: 20
+  WEIGHT_DECAY: 0.1
+  BASE_LR: 5e-4
+  WARMUP_LR: 5e-7
+  MIN_LR: 5e-6
+  CLIP_GRAD: 5.0
+  AUTO_RESUME: True
+  ACCUMULATION_STEPS: 1
+  USE_CHECKPOINT: False
+
+  LR_SCHEDULER:
+    NAME: 'cosine'
+    DECAY_EPOCHS: 30
+    DECAY_RATE: 0.1
+    WARMUP_PREFIX: True
+    GAMMA: 0.1
+    MULTISTEPS: []
+
+  OPTIMIZER:
+    NAME: 'adamw'
+    EPS: 1e-8
+    BETAS: [0.9, 0.999]
+    MOMENTUM: 0.9
+
+  LAYER_DECAY: 1.0
+
+AUG:
+  COLOR_JITTER: 0.4
+  AUTO_AUGMENT: 'rand-m9-mstd0.5-inc1'
+  REPROB: 0.25
+  REMODE: 'pixel'
+  RECOUNT: 1
+  MIXUP: 0.8
+  CUTMIX: 1.0
+  CUTMIX_MINMAX: None
+  MIXUP_PROB: 1.0
+  MIXUP_SWITCH_PROB: 0.5
+  MIXUP_MODE: 'batch'
+
+TEST:
+  CROP: True
+  SEQUENTIAL: False
+  SHUFFLE: False
+
+ENABLE_AMP: False
+AMP_ENABLE: True
+AMP_OPT_LEVEL: ''
+OUTPUT: 'output'
+TAG: 'triple_class'
+SAVE_FREQ: 1
+PRINT_FREQ: 10
+SEED: 0
+EVAL_MODE: False
+THROUGHPUT_MODE: False
+LOCAL_RANK: 0
+FUSED_WINDOW_PROCESS: False
+FUSED_LAYERNORM: False

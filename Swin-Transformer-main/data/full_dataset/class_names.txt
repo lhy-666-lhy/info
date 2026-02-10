@@ -1,0 +1,3 @@
+class0_platelet_producing
+class1_bare_nucleus
+class2_granular

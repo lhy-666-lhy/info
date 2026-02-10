@@ -1,0 +1,36 @@
+{
+  "total_images": 1450,
+  "split_totals": {
+    "train": 868,
+    "val": 289,
+    "test": 293
+  },
+  "split_ratios": {
+    "train": 0.6,
+    "val": 0.2,
+    "test": 0.2
+  },
+  "random_seed": 42,
+  "classes": {
+    "class0_platelet_producing": {
+      "train": 327,
+      "val": 109,
+      "test": 110
+    },
+    "class2_granular": {
+      "train": 403,
+      "val": 134,
+      "test": 136
+    },
+    "class1_bare_nucleus": {
+      "train": 138,
+      "val": 46,
+      "test": 47
+    }
+  },
+  "class_mapping": {
+    "产生血小板型巨核细胞": "class0_platelet_producing",
+    "巨核细胞裸核": "class1_bare_nucleus",
+    "颗粒型巨核细胞": "class2_granular"
+  }
+}
