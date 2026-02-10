@@ -1,0 +1,14 @@
+artifact_uri: file:///data3/hongyu/info/Swin-Transformer-main/mlruns/989601223837484676/981b391e9af64552833f37ad07939249/artifacts
+end_time: 1770759656566
+entry_point_name: ''
+experiment_id: '989601223837484676'
+lifecycle_stage: active
+run_id: 981b391e9af64552833f37ad07939249
+run_name: skittish-moose-712
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1770759511745
+status: 3
+tags: []
+user_id: hongyu

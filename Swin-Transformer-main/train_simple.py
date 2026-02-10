@@ -18,6 +18,13 @@ import time
 import numpy as np
 from collections import Counter
 
+try:
+    import mlflow
+    import mlflow.pytorch
+    MLFLOW_AVAILABLE = True
+except ImportError:
+    MLFLOW_AVAILABLE = False
+
 # 添加项目路径
 sys.path.append('/root/github/Swin-Transformer-main')
 
@@ -231,8 +238,15 @@ def main():
     parser.add_argument('--augmentation', type=str, default='enhanced', 
                        choices=['basic', 'medium', 'enhanced', 'strong'],
                        help='数据增强级别: basic/medium/enhanced/strong')
+    parser.add_argument('--no-mlflow', action='store_true', help='禁用 MLflow 监控')
+    parser.add_argument('--mlflow-experiment', type=str, default='swin-simple-training',
+                       help='MLflow 实验名称')
+    parser.add_argument('--mlflow-run-name', type=str, default=None,
+                       help='MLflow 运行名称（默认自动生成）')
     
     args = parser.parse_args()
+    
+    use_mlflow = MLFLOW_AVAILABLE and not args.no_mlflow
     
     # 设置设备
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -240,6 +254,29 @@ def main():
     
     # 创建输出目录
     os.makedirs(args.output, exist_ok=True)
+    
+    # MLflow 监控
+    if use_mlflow:
+        mlflow_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mlruns')
+        os.makedirs(mlflow_dir, exist_ok=True)
+        mlflow.set_tracking_uri(f'file://{os.path.abspath(mlflow_dir)}')
+        mlflow.set_experiment(args.mlflow_experiment)
+        mlflow.start_run(run_name=args.mlflow_run_name)
+        mlflow.log_params({
+            'data_path': args.data_path,
+            'pretrained': args.pretrained,
+            'output': args.output,
+            'batch_size': args.batch_size,
+            'epochs': args.epochs,
+            'lr': args.lr,
+            'num_workers': args.num_workers,
+            'augmentation': args.augmentation,
+            'optimizer': 'AdamW',
+            'scheduler': 'CosineAnnealingLR',
+        })
+        print(f"📈 MLflow 监控已开启 (experiment: {args.mlflow_experiment})")
+    elif not MLFLOW_AVAILABLE:
+        print("⚠️  未安装 mlflow，跳过监控。安装: pip install mlflow")
     
     # 创建数据加载器
     print("📊 创建数据加载器...")
@@ -343,6 +380,16 @@ def main():
         print(f"  验证 - Loss: {val_loss:.4f}, Acc: {val_acc:.2f}%")
         print(f"  学习率: {optimizer.param_groups[0]['lr']:.6f}")
         
+        # MLflow 记录每轮指标
+        if use_mlflow:
+            mlflow.log_metrics({
+                'train_loss': train_loss,
+                'train_acc': train_acc,
+                'val_loss': val_loss,
+                'val_acc': val_acc,
+                'learning_rate': optimizer.param_groups[0]['lr'],
+            }, step=epoch + 1)
+        
         # 保存最佳模型
         if val_acc > best_acc:
             best_acc = val_acc
@@ -361,6 +408,9 @@ def main():
             best_model_path = os.path.join(args.output, 'best_model.pth')
             torch.save(checkpoint, best_model_path)
             print(f"💾 保存最佳模型: {best_model_path} (Acc: {val_acc:.2f}%)")
+            if use_mlflow:
+                mlflow.log_artifact(best_model_path, artifact_path='models')
+                mlflow.log_metric('best_val_acc', val_acc, step=epoch + 1)
         
         # 定期保存检查点
         if (epoch + 1) % 10 == 0:
@@ -372,6 +422,11 @@ def main():
     print(f"\n🎉 训练完成!")
     print(f"🏆 最佳验证准确率: {best_acc:.2f}%")
     print(f"📁 模型保存在: {args.output}")
+    
+    if use_mlflow:
+        mlflow.log_metric('best_val_acc', best_acc)
+        mlflow.end_run()
+        print(f"📈 MLflow 运行已结束，可在 mlruns 目录查看或运行: mlflow ui")
 
 if __name__ == '__main__':
     main()

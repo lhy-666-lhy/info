@@ -1,0 +1,6 @@
+artifact_location: file:///data3/hongyu/info/Swin-Transformer-main/mlruns/100577690349012149
+creation_time: 1770760414548
+experiment_id: '100577690349012149'
+last_update_time: 1770760414548
+lifecycle_stage: active
+name: baseline-cnn

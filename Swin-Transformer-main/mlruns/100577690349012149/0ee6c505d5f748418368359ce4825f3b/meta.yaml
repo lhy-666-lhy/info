@@ -1,0 +1,14 @@
+artifact_uri: file:///data3/hongyu/info/Swin-Transformer-main/mlruns/100577690349012149/0ee6c505d5f748418368359ce4825f3b/artifacts
+end_time: 1770760903302
+entry_point_name: ''
+experiment_id: '100577690349012149'
+lifecycle_stage: active
+run_id: 0ee6c505d5f748418368359ce4825f3b
+run_name: judicious-stag-655
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1770760414631
+status: 3
+tags: []
+user_id: hongyu

@@ -1,0 +1,14 @@
+artifact_uri: file:///data3/hongyu/info/Swin-Transformer-main/mlruns/224710541235729075/1d24b980379b4c549c6af7756579991d/artifacts
+end_time: 1770761435226
+entry_point_name: ''
+experiment_id: '224710541235729075'
+lifecycle_stage: active
+run_id: 1d24b980379b4c549c6af7756579991d
+run_name: shivering-lark-36
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1770760941796
+status: 3
+tags: []
+user_id: hongyu

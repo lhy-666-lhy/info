@@ -1,0 +1,6 @@
+artifact_location: file:///data3/hongyu/info/Swin-Transformer-main/mlruns/224710541235729075
+creation_time: 1770760941673
+experiment_id: '224710541235729075'
+last_update_time: 1770760941673
+lifecycle_stage: active
+name: baseline-resnet50
