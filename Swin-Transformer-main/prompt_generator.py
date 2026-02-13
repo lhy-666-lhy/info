@@ -18,7 +18,10 @@ from datetime import datetime
 from pathlib import Path
 import shutil
 
-sys.path.append('/root/github/Swin-Transformer-main')
+# 使用脚本所在目录为项目根，便于任意路径下运行
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+if _script_dir not in sys.path:
+    sys.path.insert(0, _script_dir)
 
 from config import get_config
 from models import build_model
@@ -305,6 +308,7 @@ def main():
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         output_dir = os.path.join(args.output_base, f"{image_name}_{timestamp}")
         os.makedirs(output_dir, exist_ok=True)
+        print(f"OUTPUT_DIR:{output_dir}")  # 立即输出供 shell 解析，避免后续异常时无法获取
         print(f"📂 创建输出目录: {output_dir}\n")
         
         # 加载模型
